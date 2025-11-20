@@ -34,8 +34,11 @@
 
     <main class="container mt-5 pt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold">Dashboard Prediksi Harga</h2>
-            <span class="badge bg-success p-2"><i class="fas fa-dot-circle me-1"></i> Live Data 2025</span>
+            <div>
+                <h2 class="fw-bold">Dashboard Prediksi Harga</h2>
+                <p class="text-muted mb-0">Analisis AI & Integrasi Data Badan Pangan Nasional</p>
+            </div>
+            <span class="badge bg-success p-2"><i class="fas fa-broadcast-tower me-1"></i> Live Data 2025</span>
         </div>
         
         <div class="row mb-4">
@@ -43,8 +46,12 @@
                 <label for="commoditySelect" class="form-label fw-bold">Pilih Komoditas:</label>
                 <select id="commoditySelect" class="form-select shadow-sm border-primary">
                     <option value="beras">Beras Premium</option>
-                    <option value="cabai">Cabai Merah</option>
+                    <option value="cabai">Cabai Merah Keriting</option>
                     <option value="bawang">Bawang Merah</option>
+                    <option value="minyak">Minyak Goreng (Kita)</option>
+                    <option value="gula">Gula Pasir Konsumsi</option>
+                    <option value="telur">Telur Ayam Ras</option>
+                    <option value="daging">Daging Ayam Ras</option>
                 </select>
             </div>
             <div class="col-md-6 d-flex align-items-end justify-content-end">
@@ -59,19 +66,19 @@
                 <h5 class="card-title fw-bold text-primary mb-3"><i class="fas fa-globe-asia me-2"></i>Analisis Faktor Eksternal</h5>
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <div class="p-3 bg-light rounded">
+                        <div class="p-3 bg-light rounded h-100">
                             <p class="mb-1 text-muted small">Kondisi Cuaca</p>
                             <p class="mb-0 fw-bold"><i class="fas fa-cloud-sun text-warning me-2"></i> <span id="weatherFactor">Memuat...</span></p>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="p-3 bg-light rounded">
+                        <div class="p-3 bg-light rounded h-100">
                             <p class="mb-1 text-muted small">Stok Nasional</p>
                             <p class="mb-0 fw-bold"><i class="fas fa-warehouse text-info me-2"></i> <span id="stockFactor">Memuat...</span></p>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="p-3 bg-light rounded">
+                        <div class="p-3 bg-light rounded h-100">
                             <p class="mb-1 text-muted small">Status Distribusi</p>
                             <p class="mb-0 fw-bold"><i class="fas fa-truck text-success me-2"></i> <span id="distributionFactor">Memuat...</span></p>
                         </div>
@@ -80,7 +87,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-lg-6 mb-4">
                 <div class="card shadow-sm h-100 border-0">
                     <div class="card-body">
@@ -104,6 +111,28 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold"><i class="fas fa-newspaper me-2 text-danger"></i>Berita Pangan Terkini</h5>
+                        <a href="https://badanpangan.go.id/berita" target="_blank" class="btn btn-sm btn-outline-secondary">Lihat Semua</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="newsContainer">
+                            <div class="col-12 text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2 text-muted">Mengambil berita dari Badan Pangan Nasional...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer class="bg-dark text-white py-4 mt-5">
@@ -131,28 +160,98 @@
             let predictionChart = null;
             let historicalChart = null;
             
-            // --- 1. DATA DUMMY CERDAS (SIMULASI) ---
+            // --- 1. DATA DUMMY CERDAS (UPDATE: KOMODITAS BARU) ---
             const baseData = {
                 beras: { 
                     min: 12500, max: 14000, 
-                    factors: { weather: "Cerah (Panen Raya)", stock: "Surplus 15%", distribution: "Lancar Jaya" }
+                    factors: { weather: "Cerah (Panen Raya)", stock: "Surplus 15% (Bulog)", distribution: "Lancar via Tol Laut" }
                 },
                 cabai: { 
                     min: 35000, max: 55000, 
-                    factors: { weather: "Hujan Ekstrem", stock: "Menipis", distribution: "Terhambat" }
+                    factors: { weather: "Hujan Ekstrem", stock: "Menipis di Sentra", distribution: "Terhambat di Jawa" }
                 },
                 bawang: { 
                     min: 28000, max: 42000, 
-                    factors: { weather: "Berawan", stock: "Cukup", distribution: "Normal" }
+                    factors: { weather: "Berawan", stock: "Cukup Aman", distribution: "Normal" }
+                },
+                minyak: { 
+                    min: 14000, max: 16500, 
+                    factors: { weather: "Normal", stock: "Stok DMO Cukup", distribution: "Operasi Pasar" }
+                },
+                gula: { 
+                    min: 16000, max: 18000, 
+                    factors: { weather: "Musim Giling", stock: "Impor Masuk", distribution: "Lancar" }
+                },
+                telur: { 
+                    min: 27000, max: 32000, 
+                    factors: { weather: "Panas (Produksi Turun)", stock: "Harga Pakan Naik", distribution: "Lancar" }
+                },
+                daging: { 
+                    min: 35000, max: 40000, 
+                    factors: { weather: "Normal", stock: "Stabil", distribution: "Lancar" }
                 }
             };
 
-            // --- 2. FUNGSI GENERATE DATA ---
+            // --- 2. BERITA SIMULASI (Agar Aman saat Demo Offline/CORS) ---
+            const newsData = [
+                {
+                    title: "Bapanas Pastikan Stok Beras Aman Jelang Idul Adha 2025",
+                    source: "Badan Pangan Nasional",
+                    date: "20 Nov 2025",
+                    img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=300&h=200",
+                    link: "https://badanpangan.go.id/berita"
+                },
+                {
+                    title: "Operasi Pasar Murah Minyak Goreng Digelar di 34 Provinsi",
+                    source: "Info Pangan",
+                    date: "19 Nov 2025",
+                    img: "https://images.unsplash.com/photo-1474979266404-7cadd259c308?auto=format&fit=crop&q=80&w=300&h=200",
+                    link: "https://badanpangan.go.id/berita"
+                },
+                {
+                    title: "Harga Cabai Mulai Turun Seiring Panen di Jawa Timur",
+                    source: "Berita Pertanian",
+                    date: "18 Nov 2025",
+                    img: "https://images.unsplash.com/photo-1588252303782-7474905e937e?auto=format&fit=crop&q=80&w=300&h=200",
+                    link: "https://badanpangan.go.id/berita"
+                },
+                {
+                    title: "Pemerintah Dorong Digitalisasi Rantai Pasok Telur Ayam",
+                    source: "Teknologi Pangan",
+                    date: "18 Nov 2025",
+                    img: "https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&q=80&w=300&h=200",
+                    link: "https://badanpangan.go.id/berita"
+                }
+            ];
+
+            function renderNews() {
+                const container = $('#newsContainer');
+                container.empty();
+                
+                newsData.forEach(news => {
+                    const html = `
+                        <div class="col-md-3 mb-3">
+                            <div class="card h-100 border shadow-sm hover-shadow">
+                                <img src="${news.img}" class="card-img-top" alt="Berita" style="height: 150px; object-fit: cover;">
+                                <div class="card-body p-3">
+                                    <span class="badge bg-secondary mb-2" style="font-size: 10px;">${news.source}</span>
+                                    <h6 class="card-title fw-bold" style="font-size: 14px;">
+                                        <a href="${news.link}" target="_blank" class="text-decoration-none text-dark stretched-link">${news.title}</a>
+                                    </h6>
+                                    <p class="card-text text-muted" style="font-size: 11px;"><i class="far fa-clock me-1"></i>${news.date}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.append(html);
+                });
+            }
+
+            // --- 3. FUNGSI GENERATE DATA ---
             function generateData(commodity) {
                 const days = 30;
                 const settings = baseData[commodity];
                 
-                // Generate Tanggal
                 const futureLabels = Array.from({length: 30}, (_, i) => {
                     const d = new Date(); d.setDate(d.getDate() + i);
                     return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -162,20 +261,16 @@
                     return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
                 });
 
-                // Generate Angka Historis (Random Realistis)
                 const historicalData = [];
                 let currentPrice = settings.min + Math.random() * (settings.max - settings.min);
                 for(let i=0; i<days; i++) {
                     let change = (Math.random() - 0.5) * (settings.max * 0.05);
                     currentPrice += change;
-                    // Keep within bounds
                     currentPrice = Math.max(settings.min, Math.min(settings.max, currentPrice));
                     historicalData.push(Math.floor(currentPrice));
                 }
 
-                // Generate Prediksi (Regresi Linear Sederhana)
                 const predictionData = [];
-                // Hitung trend sederhana dari data terakhir
                 const lastPrice = historicalData[historicalData.length-1];
                 let trend = (historicalData[historicalData.length-1] - historicalData[0]) / days;
                 
@@ -189,28 +284,23 @@
                 };
             }
 
-            // --- 3. LOAD DATA KE LAYAR ---
+            // --- 4. LOAD DATA KE LAYAR ---
             function loadCommodityData(commodity) {
                 const data = generateData(commodity);
                 
-                // Update Teks Faktor
                 $('#weatherFactor').text(data.factors.weather);
                 $('#stockFactor').text(data.factors.stock);
                 $('#distributionFactor').text(data.factors.distribution);
 
-                // Render Chart Prediksi
                 renderPredictionChart(data.futureLabels, data.predictionData);
-                
-                // Render Chart Historis + Data User
                 renderHistoricalChart(data.pastLabels, data.historicalData, commodity);
             }
 
-            // --- 4. RENDER CHART PREDIKSI ---
+            // --- 5. RENDER CHART PREDIKSI ---
             function renderPredictionChart(labels, data) {
                 const ctx = document.getElementById('predictionChart').getContext('2d');
                 if (predictionChart) predictionChart.destroy();
 
-                // Buat Gradient
                 let gradient = ctx.createLinearGradient(0, 0, 0, 400);
                 gradient.addColorStop(0, 'rgba(13, 110, 253, 0.5)');
                 gradient.addColorStop(1, 'rgba(13, 110, 253, 0.0)');
@@ -238,16 +328,14 @@
                 });
             }
 
-            // --- 5. RENDER CHART HISTORIS (DENGAN LOCALSTORAGE) ---
+            // --- 6. RENDER CHART HISTORIS (DENGAN LOCALSTORAGE) ---
             function renderHistoricalChart(labels, sysData, commodity) {
                 const ctx = document.getElementById('historicalChart').getContext('2d');
                 if (historicalChart) historicalChart.destroy();
 
-                // Ambil Data User dari LocalStorage
                 const reports = JSON.parse(localStorage.getItem('priceReports')) || [];
-                const userData = new Array(30).fill(null); // Array kosong
+                const userData = new Array(30).fill(null);
                 
-                // Cocokkan tanggal laporan user dengan label grafik
                 reports.forEach(rep => {
                     if(rep.commodity === commodity) {
                         const repDate = new Date(rep.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
@@ -290,11 +378,9 @@
                 });
             }
 
-            // --- 6. FITUR DOWNLOAD EXCEL (CSV) ---
+            // --- 7. FITUR DOWNLOAD EXCEL ---
             $('#downloadData').on('click', function() {
                 const commodity = $('#commoditySelect').val();
-                
-                // Animasi Loading SweetAlert
                 let timerInterval;
                 Swal.fire({
                     title: 'Mengunduh Data...',
@@ -304,17 +390,12 @@
                     didOpen: () => { Swal.showLoading(); },
                     willClose: () => { clearInterval(timerInterval); }
                 }).then((result) => {
-                    // Proses Download
                     const data = generateData(commodity);
                     let csvContent = "data:text/csv;charset=utf-8,";
                     csvContent += "Tanggal,Tipe Data,Harga (Rp)\n";
                     
-                    data.pastLabels.forEach((l, i) => {
-                        csvContent += `${l},Historis,${data.historicalData[i]}\n`;
-                    });
-                    data.futureLabels.forEach((l, i) => {
-                        csvContent += `${l},Prediksi,${data.predictionData[i]}\n`;
-                    });
+                    data.pastLabels.forEach((l, i) => { csvContent += `${l},Historis,${data.historicalData[i]}\n`; });
+                    data.futureLabels.forEach((l, i) => { csvContent += `${l},Prediksi,${data.predictionData[i]}\n`; });
 
                     const encodedUri = encodeURI(csvContent);
                     const link = document.createElement("a");
@@ -323,19 +404,18 @@
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-
-                    // Sukses Message
                     Swal.fire('Berhasil!', 'Data telah tersimpan.', 'success');
                 });
             });
 
-            // --- 7. EVENT LISTENER GANTI KOMODITAS ---
+            // --- 8. EVENT LISTENER ---
             $('#commoditySelect').on('change', function() {
                 loadCommodityData($(this).val());
             });
 
-            // --- 8. INISIALISASI AWAL ---
+            // --- 9. INIT ---
             loadCommodityData('beras');
+            renderNews(); // Load Berita
         });
     </script>
 </body>

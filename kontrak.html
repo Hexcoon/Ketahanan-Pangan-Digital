@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontrak Digital - Prediksi Harga Komoditas Indonesia 2025</title>
-    
+    <title>Kontrak Digital - Komoditas Indonesia 2025</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
             <div class="container">
@@ -24,18 +21,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Beranda</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="dashboard.html">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="kontrak.html">Kontrak Digital</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="lapor.html">Lapor Harga</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                        <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="kontrak.html">Kontrak Digital</a></li>
+                        <li class="nav-item"><a class="nav-link" href="lapor.html">Lapor Harga</a></li>
                     </ul>
                 </div>
             </div>
@@ -43,24 +32,25 @@
     </header>
     <main class="container mt-5 pt-5">
         <h2 class="mb-4">Buat dan Lacak Kontrak Digital</h2>
-        
         <div class="row">
             <div class="col-lg-6 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Detail Kontrak Baru</h5>
                         <form id="contractForm">
-                            
                             <div id="notification"></div>
-
                             <div class="mb-3">
                                 <label for="commodity" class="form-label">Komoditas</label>
                                 <select class="form-select" id="commodity" required>
                                     <option value="" disabled selected>Pilih Komoditas</option>
-                                    <option value="beras">Beras</option>
-                                    <option value="cabai">Cabai</option>
+                                    <option value="beras">Beras Premium</option>
+                                    <option value="cabai">Cabai Merah</option>
                                     <option value="bawang">Bawang Merah</option>
-                                    <option value="gula">Gula</option> </select>
+                                    <option value="minyak">Minyak Goreng</option>
+                                    <option value="gula">Gula Pasir</option>
+                                    <option value="telur">Telur Ayam</option>
+                                    <option value="daging">Daging Ayam</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="quantity" class="form-label">Kuantitas (Kg)</label>
@@ -110,8 +100,7 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="contractsTable">
-                                    </tbody>
+                                <tbody id="contractsTable"></tbody>
                             </table>
                             <div id="noContractsMessage" class="text-center py-4 text-muted">
                                 <i class="fas fa-file-contract fa-3x mb-3"></i>
@@ -122,7 +111,6 @@
                 </div>
             </div>
         </div>
-        
     </main>
 
     <footer class="bg-dark text-white py-4 mt-5">
@@ -138,8 +126,135 @@
             </div>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="kontrak.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            const today = new Date().toISOString().split('T')[0];
+            $('#startDate').val(today);
+            
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 30);
+            $('#endDate').val(endDate.toISOString().split('T')[0]);
+            
+            loadContractsFromLocalStorage();
+            
+            $('#contractForm').on('submit', function(e) {
+                e.preventDefault();
+                if (!validateForm()) return;
+                
+                const newContract = getFormData();
+                newContract.id = 'KTR-' + Date.now();
+                newContract.status = 'Draft';
+                
+                saveContractToLocalStorage(newContract);
+                addContractToTable(newContract);
+                showNotification('Kontrak berhasil disimpan sebagai **Draft**!', 'success');
+                
+                this.reset();
+                $('#startDate').val(today);
+                $('#endDate').val(endDate.toISOString().split('T')[0]);
+            });
+            
+            $('#deleteAllContracts').on('click', function() {
+                if (confirm('Hapus semua riwayat kontrak?')) {
+                    localStorage.removeItem('digitalContracts');
+                    $('#contractsTable').empty();
+                    toggleNoContractsMessage(true);
+                }
+            });
+            
+            $('#contractsTable').on('click', '.btn-view-contract', function() { viewContractDetails($(this).data('id')); });
+            $('#contractsTable').on('click', '.btn-complete-contract', function() { markContractAsComplete($(this).data('id')); });
+
+            function getFormData() {
+                return {
+                    commodity: $('#commodity').val(),
+                    quantity: parseInt($('#quantity').val()),
+                    agreedPrice: parseInt($('#agreedPrice').val()),
+                    startDate: $('#startDate').val(),
+                    endDate: $('#endDate').val(),
+                    partyName: $('#partyName').val()
+                };
+            }
+            
+            function validateForm() {
+                const startDate = new Date($('#startDate').val());
+                const endDate = new Date($('#endDate').val());
+                if (endDate <= startDate) { showNotification('Tanggal Berakhir harus setelah Mulai.', 'danger'); return false; }
+                if (parseInt($('#quantity').val()) < 1) { showNotification('Kuantitas tidak valid.', 'danger'); return false; }
+                return true;
+            }
+
+            function loadContractsFromLocalStorage() {
+                const contracts = JSON.parse(localStorage.getItem('digitalContracts') || '[]');
+                $('#contractsTable').empty();
+                if (contracts.length === 0) { toggleNoContractsMessage(true); } 
+                else { contracts.forEach(addContractToTable); toggleNoContractsMessage(false); }
+            }
+            
+            function saveContractToLocalStorage(newContract) {
+                const contracts = JSON.parse(localStorage.getItem('digitalContracts') || '[]');
+                contracts.push(newContract);
+                localStorage.setItem('digitalContracts', JSON.stringify(contracts));
+            }
+            
+            function addContractToTable(contract) {
+                toggleNoContractsMessage(false);
+                let statusBadge = contract.status === 'Draft' ? '<span class="badge bg-warning text-dark">Draft</span>' : '<span class="badge bg-success">Selesai</span>';
+                
+                const row = `<tr data-id="${contract.id}">
+                    <td>${contract.id.split('-')[1].slice(-4)}</td>
+                    <td>${contract.commodity.toUpperCase()}</td>
+                    <td>Rp ${contract.agreedPrice.toLocaleString('id-ID')}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info btn-view-contract me-1" data-id="${contract.id}"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-success btn-complete-contract" data-id="${contract.id}" ${contract.status === 'Selesai' ? 'disabled' : ''}><i class="fas fa-check"></i></button>
+                    </td>
+                </tr>`;
+                $('#contractsTable').append(row);
+            }
+            
+            function toggleNoContractsMessage(show) {
+                if (show) { $('#noContractsMessage').show(); $('#contractsTable').hide(); } 
+                else { $('#noContractsMessage').hide(); $('#contractsTable').show(); }
+            }
+            
+            function markContractAsComplete(contractId) {
+                const contracts = JSON.parse(localStorage.getItem('digitalContracts') || '[]');
+                const index = contracts.findIndex(c => c.id === contractId);
+                if (index !== -1) {
+                    contracts[index].status = 'Selesai';
+                    localStorage.setItem('digitalContracts', JSON.stringify(contracts));
+                    loadContractsFromLocalStorage();
+                }
+            }
+
+            function viewContractDetails(contractId) {
+                const contracts = JSON.parse(localStorage.getItem('digitalContracts') || '[]');
+                const contract = contracts.find(c => c.id === contractId);
+                if (!contract) return;
+                
+                const total = contract.quantity * contract.agreedPrice;
+                const html = `
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary">ID: ${contract.id.split('-')[1].slice(-4)}</h6>
+                        <p><strong>Komoditas:</strong> ${contract.commodity.toUpperCase()}</p>
+                        <p><strong>Total:</strong> Rp ${total.toLocaleString('id-ID')}</p>
+                        <p><strong>Pihak 2:</strong> ${contract.partyName}</p>
+                        <p><strong>Status:</strong> ${contract.status}</p>
+                    </div>`;
+                $('#contractForm').html(html + `<button class="btn btn-sm btn-secondary mt-3" onclick="location.reload()">Kembali</button>`);
+            }
+            
+            function showNotification(message, type) {
+                $('#notification').html(`<div class="alert alert-${type} alert-dismissible fade show">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`);
+                setTimeout(() => { $('.alert').alert('close'); }, 5000);
+            }
+        });
+    </script>
 </body>
 </html>
