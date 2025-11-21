@@ -1,182 +1,130 @@
-/* MASTERPIECE STYLE v7.0 - The Final Polish */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* UPDATE 10.0 - PROFESSIONAL DASHBOARD UI (FINAL) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --primary: #0d6efd;       /* Biru Utama */
-    --primary-dark: #0a58ca;  /* Biru Gelap */
-    --secondary: #6c757d;     /* Abu-abu */
-    --success: #198754;       /* Hijau Sukses */
-    --warning: #ffc107;       /* Kuning Peringatan */
-    --danger: #dc3545;        /* Merah Bahaya */
-    --dark: #212529;          /* Hitam Pekat */
-    --light: #f8f9fa;         /* Putih Terang */
-    --bg-body: #f0f2f5;       /* Abu-abu Background */
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-    --shadow-md: 0 5px 15px rgba(0,0,0,0.08);
-    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    /* Color Palette (WCAG Compliant High Contrast) */
+    --primary: #0056b3;       /* Biru Profesional */
+    --primary-dark: #004494;
+    --secondary: #6c757d;     /* Abu-abu Netral */
+    --success: #198754;       /* Hijau Stabil */
+    --warning: #d39e00;       /* Kuning Gelap (Readable on White) */
+    --danger: #dc3545;        /* Merah Kritis */
+    --dark: #212529;          /* Teks Utama */
+    --light: #f8f9fa;         /* Background Elemen */
+    --bg-body: #f4f6f8;       /* Background Halaman Abu-abu Tipis */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* --- 1. RESET & LAYOUT --- */
 html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif; /* Font standar UI modern */
     background-color: var(--bg-body);
     display: flex;
     flex-direction: column;
-    color: #333;
+    color: var(--dark);
 }
 
-/* Padding Top agar konten tidak tertutup Navbar Fixed */
+/* Fix Layout Tertutup Navbar */
 body { padding-top: 76px; }
+main { flex: 1; position: relative; z-index: 1; }
 
-main { 
-    flex: 1; 
-    position: relative; 
-    z-index: 1; 
-}
-
-/* --- 2. NAVBAR PREMIUM --- */
+/* Navbar Premium */
 .navbar {
-    background: linear-gradient(90deg, #0d6efd 0%, #0043a7 100%); /* Gradient Biru Elegan */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: linear-gradient(90deg, #003366 0%, #004080 100%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     z-index: 1030;
-    padding: 0.8rem 0;
 }
-.navbar-brand { 
-    font-weight: 700; 
-    letter-spacing: 0.5px; 
-    font-size: 1.3rem;
-}
-.nav-link { 
-    font-weight: 500; 
-    color: rgba(255,255,255,0.85) !important;
-    transition: 0.3s; 
-    margin-left: 10px;
-}
-.nav-link:hover { 
-    color: #fff !important; 
-    transform: translateY(-2px); 
-}
-.nav-link.active { 
-    color: #fff !important; 
-    font-weight: 700; 
-    border-bottom: 2px solid #ffc107; /* Garis bawah kuning untuk menu aktif */
-}
+.navbar-brand { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
+.nav-link { font-weight: 500; transition: 0.2s; }
+.nav-link:hover { color: #ffc107 !important; }
+.nav-link.active { font-weight: 700; color: #fff !important; border-bottom: 2px solid #ffc107; }
 
-/* --- 3. HERO SECTION (THE FIX) --- */
-/* Menggunakan Gradient CSS Murni -> Anti-Broken Image, Ringan, & Mewah */
-.hero-section {
-    background: linear-gradient(135deg, #0d6efd 0%, #002855 100%);
-    color: white;
-    padding: 100px 20px;
-    border-radius: 0 0 40px 40px; /* Lengkungan bawah yang modern */
-    margin-top: -20px; /* Menyatu dengan navbar */
-    margin-bottom: 50px;
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Efek Hiasan Lingkaran di Background Hero (Opsional, agar tidak polos) */
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: -50px; right: -50px;
-    width: 300px; height: 300px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-}
-.hero-section::after {
-    content: '';
-    position: absolute;
-    bottom: -50px; left: -50px;
-    width: 200px; height: 200px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 50%;
-}
-
-.hero-section h1 {
-    font-weight: 800;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-.hero-section p.lead {
-    font-weight: 400;
-    opacity: 0.9;
-    max-width: 700px;
-    margin: 0 auto 30px auto;
-}
-
-/* --- 4. CARDS & CONTENT --- */
+/* Card Styling */
 .card {
-    border: none;
-    border-radius: 16px; /* Sudut lebih membulat */
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
     background: white;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1.5rem;
 }
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+/* Hero Section (Beranda) */
+.hero-section {
+    background: linear-gradient(135deg, #004080 0%, #002040 100%);
+    color: white;
+    padding: 80px 20px;
+    border-radius: 0 0 30px 30px;
+    margin-top: -20px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-md);
 }
 
-/* Live Indicator Animation (Pulse) */
-.live-indicator {
-    width: 8px; height: 8px;
-    background-color: #fff;
-    border-radius: 50%;
-    display: inline-block;
-    animation: pulse 1.5s infinite;
+/* Big Aggregated Numbers (BAN) untuk Dashboard */
+.ban-card {
+    padding: 1.5rem;
+    border-left: 5px solid transparent;
+    height: 100%;
 }
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-    70% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+.ban-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.ban-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.25rem;
+}
+.ban-subtext { font-size: 0.85rem; font-weight: 500; }
+
+/* Contextual Borders */
+.border-success { border-left-color: var(--success) !important; }
+.border-warning { border-left-color: var(--warning) !important; }
+.border-danger { border-left-color: var(--danger) !important; }
+.border-primary { border-left-color: var(--primary) !important; }
+
+/* Chart Area */
+.chart-wrapper { position: relative; height: 320px; width: 100%; }
+
+/* Early Warning Animation */
+.animate-pulse { animation: pulse-red 2s infinite; }
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
 }
 
-/* --- 5. MAP STYLING --- */
-#map { 
-    height: 450px; 
-    width: 100%; 
-    border-radius: 16px; 
-    border: 5px solid white; 
-    box-shadow: var(--shadow-md); 
-    z-index: 1; 
+/* Map Container */
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 10px;
+    border: 4px solid white;
+    box-shadow: var(--shadow-sm);
+    z-index: 1;
 }
 
-/* --- 6. FOOTER --- */
-footer { 
-    background-color: var(--dark); 
-    color: #adb5bd; 
-    margin-top: auto; 
-    padding: 40px 0; 
-    font-size: 0.9rem;
-    border-top: 5px solid var(--primary);
+/* Footer */
+footer {
+    background-color: #1a1e21;
+    color: #adb5bd;
+    margin-top: auto;
+    padding: 2rem 0;
+    font-size: 0.875rem;
+    border-top: 4px solid var(--primary);
 }
 
-/* --- 7. BUTTONS --- */
-.btn { 
-    border-radius: 50px; 
-    font-weight: 600; 
-    padding: 10px 25px; 
-    text-transform: uppercase; 
-    letter-spacing: 0.5px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-.btn:hover { 
-    transform: translateY(-3px); 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
-}
-.btn-warning {
-    background-color: #ffc107;
-    color: #000;
-    border: none;
-}
-.btn-light {
-    background-color: #fff;
-    color: var(--primary);
-    border: none;
-}
+/* Utilities */
+.btn { border-radius: 50px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 20px; }
+.help-icon { cursor: help; color: #adb5bd; transition: color 0.2s; font-size: 0.9em; }
+.help-icon:hover { color: var(--primary); }

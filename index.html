@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda - KPDI</title>
+    <title>Beranda - KPDI 2025</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -12,13 +12,13 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html"><i class="fas fa-chart-line me-2"></i>KPDI 2025</a>
+            <a class="navbar-brand fw-bold" href="index.html"><i class="fas fa-shield-alt me-2"></i>KPDI 2025</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="kontrak.html">Kontrak Digital</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kontrak.html">Kontrak</a></li>
                     <li class="nav-item"><a class="nav-link" href="lapor.html">Lapor Harga</a></li>
                     <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang</a></li>
                 </ul>
@@ -29,62 +29,84 @@
     <main>
         <section class="hero-section text-center">
             <div class="container">
-                <h1 class="display-3 fw-bold mb-3">Ketahanan Pangan Digital</h1>
-                <p class="lead mb-4">Platform monitoring harga pangan nasional berbasis data cerdas.</p>
-                <a href="dashboard.html" class="btn btn-warning btn-lg me-3 shadow"><i class="fas fa-chart-line me-2"></i>Monitoring Live</a>
-                <a href="lapor.html" class="btn btn-light btn-lg shadow"><i class="fas fa-edit me-2"></i>Lapor Harga</a>
+                <h1 class="display-4 fw-bold mb-3">Ketahanan Pangan Digital</h1>
+                <p class="lead mb-4 opacity-90">Sistem peringatan dini dan monitoring harga pangan nasional berbasis data cerdas.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="dashboard.html" class="btn btn-warning btn-lg shadow-sm"><i class="fas fa-chart-line me-2"></i>Monitoring Live</a>
+                    <a href="lapor.html" class="btn btn-light btn-lg shadow-sm text-primary"><i class="fas fa-edit me-2"></i>Lapor Harga</a>
+                </div>
             </div>
         </section>
 
-        <section class="container py-5">
-            <h3 class="text-center fw-bold mb-4">Indikator Utama Hari Ini</h3>
+        <section class="container mb-5">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card p-4 text-center">
-                        <i class="fas fa-percentage text-primary fa-3x mb-3"></i>
-                        <h5>Inflasi Pangan</h5>
-                        <h2 class="fw-bold text-primary">3.5%</h2>
-                        <small class="text-muted">Terkendali (YoY)</small>
+                    <div class="card h-100 p-4 text-center">
+                        <i class="fas fa-chart-pie text-primary fa-3x mb-3"></i>
+                        <h5 class="fw-bold">Inflasi Pangan</h5>
+                        <h2 class="text-primary fw-bold">3.5%</h2>
+                        <small class="text-muted">Terkendali (Target 2025)</small>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card p-4 text-center">
+                    <div class="card h-100 p-4 text-center">
                         <i class="fas fa-tags text-success fa-3x mb-3"></i>
-                        <h5>Rata-rata Beras</h5>
-                        <h2 class="fw-bold text-success">Rp 13.500</h2>
+                        <h5 class="fw-bold">Rata-rata Beras</h5>
+                        <h2 class="text-success fw-bold">Rp 13.500</h2>
                         <small class="text-muted">Stabil Nasional</small>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card p-4 text-center">
+                    <div class="card h-100 p-4 text-center">
                         <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
-                        <h5>Waspada</h5>
-                        <h2 class="fw-bold text-danger">Cabai</h2>
-                        <small class="text-muted">Tren Kenaikan 5%</small>
+                        <h5 class="fw-bold">Status Waspada</h5>
+                        <h2 class="text-danger fw-bold">Cabai</h2>
+                        <small class="text-muted">Volatilitas Tinggi</small>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="container mb-5">
-            <div class="card p-1">
-                <div id="map"></div>
+            <div class="card p-1 shadow-sm border-0">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h4 class="fw-bold mb-0"><i class="fas fa-map-marked-alt me-2 text-primary"></i>Peta Kerawanan Pangan</h4>
+                    <p class="text-muted small">Pantauan zona merah (defisit) dan hijau (surplus) secara real-time.</p>
+                </div>
+                <div class="card-body p-0">
+                    <div id="map"></div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer class="text-center"><div class="container"><p class="mb-0">&copy; 2025 Komoditas Indonesia. Built by Daffa & Bima. All rights reserved</p></div></footer>
+    <footer class="text-center">
+        <div class="container"><p class="mb-0">&copy; 2025 Komoditas Indonesia. Hak Cipta Dilindungi.</p></div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([-0.7893, 113.9213], 5);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OSM'}).addTo(map);
-        L.marker([-6.2, 106.8]).addTo(map).bindPopup("<b>Jakarta</b><br>Status: Waspada").openPopup();
-        L.marker([-7.2, 112.7]).addTo(map).bindPopup("<b>Surabaya</b><br>Status: Aman");
-        L.marker([3.5, 98.6]).addTo(map).bindPopup("<b>Medan</b><br>Status: Surplus");
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map', {center: [-0.7893, 113.9213], zoom: 5, scrollWheelZoom: false});
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; OpenStreetMap'}).addTo(map);
+
+            // Data Dummy Peta (Simulasi Zona)
+            var locations = [
+                { lat: -6.2088, lng: 106.8456, city: "Jakarta", status: "Waspada (Harga Tinggi)", color: "red" },
+                { lat: -7.2575, lng: 112.7521, city: "Surabaya", status: "Aman (Stabil)", color: "green" },
+                { lat: 3.5952, lng: 98.6722, city: "Medan", status: "Surplus Stok", color: "blue" },
+                { lat: -5.1477, lng: 119.4328, city: "Makassar", status: "Stabil", color: "green" },
+                { lat: -8.6705, lng: 115.2126, city: "Denpasar", status: "Waspada", color: "red" }
+            ];
+
+            locations.forEach(function(loc) {
+                var marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                var colorClass = loc.color === 'red' ? 'text-danger' : (loc.color === 'green' ? 'text-success' : 'text-primary');
+                marker.bindPopup(`<div style="text-align:center;"><strong style="font-size:1.1em;">${loc.city}</strong><br><span class="${colorClass}" style="font-weight:bold;">${loc.status}</span></div>`);
+                if (loc.city === "Jakarta") marker.openPopup();
+            });
+        });
     </script>
 </body>
-
 </html>
-
